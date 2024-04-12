@@ -1,0 +1,25 @@
+services:
+  svelte_app:
+    build:
+      dockerfile_inline: |
+        FROM node:20
+        RUN npm i npm@latest -g
+        EXPOSE 5173
+
+        ENV DOCKER=true
+
+        RUN mkdir /app && chown node:node /app
+        WORKDIR /app
+        USER node
+        COPY --chown=node:node package.json package-lock.json ./
+        RUN npm install        
+    ports:
+      - 127.0.0.1:5173:5173
+    stdin_open: true 
+    tty: true
+    volumes:
+      - .:/app
+      - node_modules:/app/node_modules
+
+volumes:
+  node_modules: {}
